@@ -23,9 +23,9 @@ get_draft <- function(location = "/Users/maxkwan/Desktop/Everything/College/Seni
   for (i in 1:length(raw_draft)) { 
     Draft_pos[i] <- i
     Round[i] <- floor(i/num_rounds) + 1
-    Team[i] <- substring(raw_draft[i], 5, regexpr("-",raw_draft[i]) - 2)
+    Team[i] <- trimws(substring(raw_draft[i], 5, regexpr("-",raw_draft[i]) - 2), which = c("both", "left", "right") )
     ugly_name <-strsplit(strsplit(raw_draft[i], split = "\\(")[[1]][2], split="-")[[1]][2]
-    Player[i] <- substring(ugly_name, 2)
+    Player[i] <- trimws(ugly_name, which = c("both", "left", "right"))
   }
   
   output <- data.frame("Draft Position" = Draft_pos, "Round" = Round, "Team" = Team, "Player" = Player)
