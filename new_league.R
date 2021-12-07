@@ -22,29 +22,36 @@ setwd("/Users/maxkwan/Documents/Everything/College/Senior/IE332/Project/")
 source('get_draft.R') #Scrapes user inputted data from txt file
 source('NHL Scrape.R') #Scrapes player stats from websites
 source('Scores.R') #Calculates a score for players from inputted metrics 
+source('kill_db_connections.R') #Used to kill all connections
 
 #==============================================================================
 #Read, Format, and Validate Inputs
 #==============================================================================
 #Save connection to MySQL database
 db <- dbConnect(MySQL(), 
-  user = "g1117498", 
+  user = "g1117498",
   password = "332group17", 
   dbname = "g1117498", 
   host = "mydb.itap.purdue.edu")
 
-league_id <- length(dbReadTable(db, "league")[,1]) + 1
+#Generate league_id and process .txt file
+league_id <- paste('l',length(dbReadTable(db, "leagues")[,1]) + 1,sep="_")
+draft <- get_draft(league_id_input = league_id)
 
+#***********USER INPUTS FOR DREW*******************
+current_date <- as.Date("2021-10-20") #REMOVE AFTER TESTING
+gm_ids_raw <- c("1,2,8,23,24,25,26,27,28,29,30,31") #REMOVE AFTER TESTING
+league_KPIs_raw <- ('G,A,GS,SV') #REMOVE AFTER TESTING
+
+#Format Inputs and Initialize Variables
 KPIs <- c("G", "A", "PPG", "PPA", "SHG","SHA", "PIM", "S", "HIT", "BLK", "GP", "GS", "W", "SV", "SVP", "SO")
 official_skater_KPIs <- c("G", "A", "PPG", "PPA", "SHG","SHA", "PIM", "S", "HIT", "BLK")
-
-#Format and Save Inputs
 team_names <- unique(draft$Team)
 num_teams <- length(team_names)-0
 num_rounds <- length(draft$Draft.Position)/num_teams
 gm_ids <- unlist(strsplit(gm_ids_raw,","))                         
 league_KPIs <- (unlist(strsplit(league_KPIs_raw,","))) 
-#db_gm_ids <- dbReadTable(db, gms)$gm_id #MUST INCLUDE a query for all gm ids
+db_gm_ids <- dbReadTable(db,'userProfiles')$user_id #Query for user ids
 
 #Check for Valid Inputs
 valid = FALSE
@@ -55,25 +62,23 @@ if (current_date > Sys.Date()) {
   reason = "Incompatible draft txt file and gm list"
 } else if (!all(league_KPIs %in% KPIs)) {
   reason = "Inputted KPIs Do Not Exist"
-  #} else if (!all(gm_ids %in% db_gm_ids)) { #Uncomment when the gm id table works
-  #reason = "One or more GM IDs were not found"
-  #} 
+} else if (!all(gm_ids %in% db_gm_ids)) {
+  reason = "One or more GM IDs were not found"
 } else {
   valid = TRUE
 }
 
-#Return Error to Website
+#Stops script from executing and returns error to website
 if (!valid) {
-  print("Error pls stop:") #Fix these messages and pass back to website
+  print("Invalid League Upload") 
   print(reason)
-} else {
-  print("valid input") #Fix these messages
+  #return...
 }
 
 #Check Analysis Types and Prepare Proper Data 
 if (current_date > as.Date("2021-10-12")) { 
   anal_type <- "Retrospective Analysis"
-  db_stats <- dbReadTable(db, 'stats')  
+  db_stats <- dbReadTable(db, 'stats')[,-1]  
   db_players <- dbReadTable(db, 'players')
   db_stats <- merge(db_stats,db_players,by = "Id", all.y = TRUE)
   db_stats[is.na(db_stats)] = 0
@@ -85,9 +90,11 @@ if (current_date > as.Date("2021-10-12")) {
   db_stats[is.na(db_stats)] = 0
 } else { 
   anal_type <- "Past Season Analysis"
-  db_stats <- get_stats(as.numeric(format(current_date, "%Y")))
-  #Create IDs
-  #Get Score
+  db_stats <- get_stats(as.numeric(format(current_date, "%Y")))[,-1]
+  db_players <- dbReadTable(db, 'players')
+  db_stats <- merge(db_stats,db_players,by = "Id", all.y = TRUE)
+  db_stats[is.na(db_stats)] = 0
+  #Check if retired players exist in data base 
 }
 
 #Separate user inputted KPIs into skater and goalie KPIs
@@ -111,7 +118,7 @@ player_league_scores <- rbind.fill(skater_league_scores, goalie_league_scores)
 #Merge stats 
 league_stats <- merge(db_stats, player_league_scores[,c('scores', 'Id')], by ='Id', sort = FALSE)
 league_stats <- league_stats[order(-league_stats$scores),]
-league_stats_raw <- league_stats #Consider removing
+league_stats_raw <- league_stats
 
 #Change Player Positions to F/D/G for draft quality
 FDG <- c()
@@ -147,28 +154,35 @@ merge_stats_raw <- merge(draft, league_stats, by = 'FLP', all.x = TRUE, sort = F
 #==============================================================================
 #Process Data to Evaluate the Draft Quality
 #==============================================================================
-#Calculate the Pick Significance for each Draft Position
+#Pick Significance Calculation
 pick_sig <- 100/num_rounds 
-coeff_var <- sd(league_stats$scores[1:(length(draft))])/mean(league_stats$scores[1:(length(draft))])
+coeff_var <- sd(league_stats$scores[1:(length(draft))])/mean(league_stats$scores[1:(length(draft))]) #Andres Points?
 full_pick_sig <- c(1)
 for (i in 1:num_rounds) {
-  pick_sig[i] = (coeff_var )* (num_rounds/2 - i) + 100/num_rounds 
+  pick_sig[i] = (coeff_var )* (num_rounds/2 - i) + 100/num_rounds #/ (num_teams / 2 )
   full_pick_sig <- c(full_pick_sig, rep(pick_sig[i],num_teams))
 }
 full_pick_sig <- full_pick_sig[-1]
 
 #Initializing Variables for Processing
 pick_rating <- (1:length(draft$Draft.Position)) - 0 
-optimal_pick <-rep("",length(draft$Draft.Position))
-gm_report <- data.frame("Name" = team_names, "Grade" = rep(0,num_teams),"playersMissing" = rep(0,num_teams)) 
-merge_stats_clean <- data.frame("Id" = merge_stats_raw$Id, 
+optimal_pick <- rep("",length(draft$Draft.Position))
+optimal_pick_flp <- rep("",length(draft$Draft.Position))
+gm_report <- data.frame(
+  "Name" = team_names, 
+  "Grade" = rep(0,num_teams),
+  "playersMissing" = rep(0,num_teams)
+)
+merge_stats_clean <- data.frame(
+  "Id" = merge_stats_raw$Id, 
   "Player" = merge_stats_raw$Player, 
   "FLP" = merge_stats_raw$FLP, 
   "Team" = merge_stats_raw$Team, 
-  "Team_id"= merge_stats_raw$Team_ID, #CONSIDER REMOVING OR UPDATING
+  "Team_id"= merge_stats_raw$Team_ID, 
   "Draft Position" = merge_stats_raw$Draft.Position, 
   "scores" = merge_stats_raw$scores, 
-  "pos" = merge_stats_raw$pos.y) 
+  "pos" = merge_stats_raw$pos.y
+)
 available_player_stats <- league_stats
 
 #Determine the optimal pick and best points and calculate the pick rating for all drafted picks
@@ -177,8 +191,9 @@ for (i in 1:length(merge_stats_clean$FLP)) {
   if(grepl(merge_stats_clean$FLP[i], filter(available_player_stats, pos == merge_stats_clean$pos[i])$FLP) %>% sum() > 0) { #If the player is found in both the draft and current season
     #Determine the optimal pick, best points, and pick rating for a draft position
     bestPts <- filter(available_player_stats, pos == merge_stats_clean$pos[i])$scores[1]
-    optimal_pick[i] <- filter(available_player_stats, pos == merge_stats_clean$pos[i])$FLP[1]
-    pick_rating[i] <- 1 - (bestPts - merge_stats_clean$scores[i])/ bestPts
+    optimal_pick[i] <- filter(available_player_stats, pos == merge_stats_clean$pos[i])$Id[1]
+    optimal_pick_flp[i] <- filter(available_player_stats, pos == merge_stats_clean$pos[i])$FLP[1]
+    pick_rating[i] <- 1 - (bestPts - merge_stats_clean$scores[i]) / bestPts
     
     #Remove the selected player from the draftable player list
     available_player_stats <- available_player_stats[-grep(merge_stats_clean$FLP[i], available_player_stats$FLP),]
@@ -194,11 +209,22 @@ for (i in 1:length(merge_stats_clean$FLP)) {
   }
 }
 
-#Calculate a Penalty for GMs that did not draft with a good mix of players
+#Calculate a penalty for teams that did not draft a good ratio of forwards, defense, and goalies
+ideal_FDG_distribution <- c(14/22,6/22,2/22)
+for (i in 1:num_teams) {
+  team_pos <- merge_stats_clean$pos[merge_stats_clean$Team == team_names[i]]
+  team_FDG_distribution <- c((
+    abs((team_pos[team_pos == "F"] %>% length())/num_rounds)-ideal_FDG_distribution[1]),
+    abs((team_pos[team_pos == "D"] %>% length())/num_rounds-ideal_FDG_distribution[2]),
+    abs((team_pos[team_pos == "G"] %>% length())/num_rounds-ideal_FDG_distribution[3])
+    ) %>% sum()
+  gm_report$Grade[i] <- gm_report$Grade[i] * (1-(team_FDG_distribution))
+}
 
 #Generate report messages that give highlights for each team
 #Prepare data required for messages
-draft_report <- data.frame("Draft.Position" = merge_stats_clean$Draft.Position, 
+draft_report <- data.frame(
+  "Draft.Position" = merge_stats_clean$Draft.Position, 
   "Team" = merge_stats_clean$Team, 
   "Player" = merge_stats_clean$Player, 
   "Pick Rating" = pick_rating, 
@@ -209,21 +235,21 @@ draft_report_metrics <- data.frame(isGoalie = grepl('G', merge_stats_raw$pos.x),
 #Group players into best/worst picks for each team based on pick rating
 worst_players <- filter(groupteams, Pick.Rating %in% range(Pick.Rating)[1])
 best_players <- filter(groupteams, Pick.Rating %in% range(Pick.Rating)[2])
-worst_players <- worst_players[!duplicated(worst_players$Team), ] #CHANGE TO TEAM ID
-best_players <- best_players[!duplicated(best_players$Team), ]#CHANGE TO TEAM ID
+worst_players <- worst_players[!duplicated(worst_players$Team), ] 
+best_players <- best_players[!duplicated(best_players$Team), ]
 
 #Generate appropriate messages
 best_player_message <- best_players %>% left_join(draft_report_metrics) %>% 
   mutate(Message = case_when (
     isGoalie ~ paste(Player,'was the best pick for',Team,'they averaged the following stats:',GS,'games started,',SV,'saves,',SVP,'save percentage,',SO,'shutouts and',W,'wins.'),
     !isGoalie ~ paste(Player,'was the best pick for',Team,'they averaged the following stats',G,'goals,',A,'assists,',PPG,'power play goals,',PPA,'power play assists,',SHG,'short handed goals,',SHA,'short handed assists,',PIM,'penalty infraction minutes,',S,'shots,',HIT,'hits and',BLK,'blocks.')
-  )
+    )
   )
 worst_player_message <- worst_players %>% left_join(draft_report_metrics) %>% 
   mutate(Message = case_when (
     isGoalie ~ paste(Player,'was the worst pick for',Team,'they averaged the following stats:',GS,'games started,',SV,'saves,',SVP,'save percentage,',SO,'shutouts and',W,'wins.'),
     !isGoalie ~ paste(Player,'was the worst pick for',Team,'they averaged the following stats',G,'goals,',A,'assists,',PPG,'power play goals,',PPA,'power play assists,',SHG,'short handed goals,',SHA,'short handed assists,',PIM,'penalty infraction minutes,',S,'shots,',HIT,'hits and',BLK,'blocks.')
-  )
+    )
   )
 
 #Store messages
@@ -251,68 +277,58 @@ draft <- cbind(draft, 'Pick Rating' = pick_rating, 'Optimal Pick' = optimal_pick
 #==============================================================================
 #Upload Draft Information to MySQL
 #==============================================================================
-#Format League Data and Upload to MySQL database
-#maybe: date, validity
-league <- data.frame("League ID" = league_id, 
-  "Season" = as.numeric(format(current_date, "%Y")), 
-  "Analysis Type" = anal_type, 
-  "Point Categories" = league_KPIs_raw, 
-  "Number of Rounds"= num_rounds, 
-  "Number of Teams" = num_teams
+#Format league Data 
+league <- data.frame("league_id" = league_id, 
+  "date_of_analysis" = current_date, 
+  "analysis_type" = anal_type, 
+  "point_categories" = league_KPIs_raw, 
+  "number_of_rounds"= num_rounds, 
+  "number_of_teams" = num_teams
 )
-dbWriteTable(db, value = league, name = "league", overwrite = TRUE, row.names = FALSE) #CHANGE OVERWRITE AFTER TESTING
 
-#Format Team Data and Upload to MySQL database
+#Format teams Data 
 league_ids <- rep(league_id, num_teams)
-team_ids <- paste(league_ids, gm_ids,sep = "") #Will need to update
-teams <- data.frame("Team ID" = team_ids, 
-  "GM ID" = gm_ids, 
-  "League ID" = league_ids, 
-  "Team Name" = gm_report$Name, 
-  "Grade" = gm_report$Grade,
-  "Best Message" = gm_report$Message.x,
-  "Worst Message" = gm_report$Message.y
-)
-dbWriteTable(db,"teams",teams,
-  field.types = NULL, #Column Headers character string (Not sure what this does)
-  row.names = FALSE, 
-  overwrite = TRUE, #CHANGE OVERWRITE AFTER TESTING
-  allow.keywords = FALSE
+teams <- data.frame( 
+  "league_id" = league_ids, 
+  "user_id" = gm_ids,
+  "team_name" = gm_report$Name, 
+  "grade" = round(gm_report$Grade),
+  "best_pick_report" = gm_report$Message.x,
+  "worst_pick_report" = gm_report$Message.y
 )
 
-#Format has_players Data and Upload to MySQL database
-has_players <- data.frame(merge_stats_clean[,c('Id','Team','scores')], "Optimal Pick" = optimal_pick) #CHANGE Team to Team_id 
-dbWriteTable(db,"has_players",has_players,
-  field.types = NULL, #Column Headers character string
-  row.names = FALSE, 
-  overwrite = TRUE, #CHANGE OVERWRITE AFTER TESTING
+#Format has_players Data 
+has_players_user_id <- paste("NA",length(merge_stats_clean$Id))
+league_ids <- rep(league_id, length(merge_stats_clean$Id))
+for (i in 1:length(merge_stats_clean$Id)) {
+  for (j in 1:(length(team_names))) {
+    if (merge_stats_clean$Team[i] == team_names[j]) {
+      has_players_user_id[i] = gm_ids[j]
+    }
+  }
+}
+has_players <- data.frame(
+  "league_id" = league_ids,
+  "user_id" = has_players_user_id,
+  "Id" = merge_stats_clean$Id,
+  "score" = merge_stats_clean$scores,
+  "optimal_pick" = optimal_pick
 )
-#==============================================================================
-#Testing SQL Outputs
-#==============================================================================
-# test_league_sql <- data.frame("League ID" = 'TEST_LEAGUE_ID_1', "Season" = as.numeric(format(current_date, "%Y")), "Analysis Type" = 'Retrospective Analysis', "Point Categories" = ('G,A,GS'), "Number of Rounds"= '12', "Number of Teams" = '12')
-# dbWriteTable(db, value = test_league_sql, name = "league",overwrite = TRUE,)
+
+#Write leagues, teams, and has_players tables to MySQL
+# dbWriteTable(db, value = league, name = "leagues", append = TRUE, row.names = FALSE)
 # 
-# test_teams_sql <- data.frame("Team ID" = c("team3","team4"), "GM ID" = c('id1','id2'), "League ID" = 'TEST_LEAGUE_ID_2', "Team Name" = c("Joe1","Joe2"), "Grade" = c(95,87), "Report" = c("The Best Player on team1 was...","The Best Player on team2 was..."))
-# dbWriteTable(db, value = test_teams_sql, name = "teams",overwrite = TRUE)
+# dbWriteTable(
+#   db,"teams",teams,
+#   field.types = NULL, 
+#   row.names = FALSE, 
+#   append = TRUE, 
+#   allow.keywords = FALSE
+# )
 # 
-# test_has_player_sql <- data.frame("TeamID" = c("team1","team1","team1"), "PlayerID" = c("Joe1_id","Joe2_id","Joe3_id"), "PlayerName" = c("Joe1","Joe2","Joe3"), "points" = c(42,54,10))
-# dbWriteTable(db, value = test_has_player_sql, name = "has_players",overwrite = TRUE)
-# 
-# dbReadTable(db, 'league')
-# dbReadTable(db, 'teams')
-# dbReadTable(db, 'has_player')
-# 
-# # Run query to get results as dataframe
-# dbGetQuery(con, "SELECT * FROM arrests limit 3")
-# 
-# # Send query to pull requests in batches
-# res <- dbSendQuery(con, "SELECT * FROM arrests")
-# data <- dbFetch(res, n = 2)
-# data
-# dbHasCompleted(res)
-# 
-# dbListResults(con)
-# dbClearResult(res)
-# dbRemoveTable(con, "arrests")
-# dbDisconnect(con)
+# dbWriteTable(
+#   db,"has_players",has_players,
+#   field.types = NULL, 
+#   row.names = FALSE, 
+#   append = TRUE, 
+# )

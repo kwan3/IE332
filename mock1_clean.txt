@@ -1,0 +1,238 @@
+Round 1
+(1) Team 1 - Connor McDavid (Edm - C)
+(2) Team 2 - Leon Draisaitl (Edm - C,LW)
+(3) Team 3 - Nathan MacKinnon (Col - C)
+(4) Team 4 - Nikita Kucherov (TB - RW)
+(5) Team 5 - Andrei Vasilevskiy (TB - G)
+(6) Team 6 - Mikko Rantanen (Col - RW)
+(7) Team 7 - David Pastrnak (Bos - RW)
+(8) Team 8 - Artemi Panarin (NYR - LW)
+(9) Team 9 - Auston Matthews (Tor - C)
+(10) Team 10 - Brad Marchand (Bos - LW)
+(11) Team 11 - Alex Ovechkin (Was - LW)
+(12) Team 12 - Cale Makar (Col - D)
+
+
+Round 2
+(1) Team 12 - Patrick Kane (Chi - RW)
+(2) Team 11 - Mitch Marner (Tor - RW)
+(3) Team 10 - Jonathan Huberdeau (Fla - LW)
+(4) Team 9 - Sidney Crosby (Pit - C)
+(5) Team 8 - Sebastian Aho (Car - C)
+(6) Team 7 - Brayden Point (TB - C,RW)
+(7) Team 6 - Mika Zibanejad (NYR - C)
+(8) Team 5 - Robin Lehner (VGK - G)
+(9) Team 4 - John Carlson (Was - D)
+(10) Team 3 - Adam Fox (NYR - D)
+(11) Team 2 - Brady Tkachuk (Ott - LW)
+(12) Team 1 - Aleksander Barkov (Fla - C)
+
+
+Round 3
+(1) Team 1 - Andrei Svechnikov (Car - LW,RW)
+(2) Team 2 - Darcy Kuemper (Col - G)
+(3) Team 3 - Kirill Kaprizov (Min - LW,RW)
+(4) Team 4 - Jake Guentzel (Pit - LW,RW)
+(5) Team 5 - Victor Hedman (TB - D)
+(6) Team 6 - Steven Stamkos (TB - C,RW)
+(7) Team 7 - Connor Hellebuyck (Wpg - G)
+(8) Team 8 - Max Pacioretty (VGK - LW)
+(9) Team 9 - Matthew Tkachuk (Cgy - LW,RW)
+(10) Team 10 - Patrice Bergeron (Bos - C)
+(11) Team 11 - Alex DeBrincat (Chi - LW,RW)
+(12) Team 12 - Mark Scheifele (Wpg - C)
+
+
+Round 4
+(1) Team 12 - John Tavares (Tor - C)
+(2) Team 11 - Igor Shesterkin (NYR - G)
+(3) Team 10 - Elias Pettersson (Van - C)
+(4) Team 9 - Mark Stone (VGK - RW)
+(5) Team 8 - Frederik Andersen (Car - G)
+(6) Team 7 - Quinn Hughes (Van - D)
+(7) Team 6 - Gabriel Landeskog (Col - C,LW)
+(8) Team 5 - Aaron Ekblad (Fla - D)
+(9) Team 4 - Alex Pietrangelo (VGK - D)
+(10) Team 3 - Kyle Connor (Wpg - LW)
+(11) Team 2 - Johnny Gaudreau (Cgy - LW,RW)
+(12) Team 1 - J.T. Miller (Van - C,LW)
+
+
+Round 5
+(1) Team 1 - Semyon Varlamov (NYI - G)
+(2) Team 2 - Marc-Andre Fleury (Chi - G)
+(3) Team 3 - Ilya Sorokin (NYI - G)
+(4) Team 4 - Brock Boeser (Van - RW)
+(5) Team 5 - Morgan Rielly (Tor - D)
+(6) Team 6 - Charlie McAvoy (Bos - D)
+(7) Team 7 - Evgeny Kuznetsov (Was - C)
+(8) Team 8 - Mathew Barzal (NYI - C)
+(9) Team 9 - Nikolaj Ehlers (Wpg - LW,RW)
+(10) Team 10 - Carey Price (Mon - G)
+(11) Team 11 - Jack Eichel (Buf - C)
+(12) Team 12 - Roope Hintz (Dal - C,LW)
+
+
+Round 6
+(1) Team 12 - Dougie Hamilton (NJ - D)
+(2) Team 11 - Nicklas Backstrom (Was - C)
+(3) Team 10 - Cam Talbot (Min - G)
+(4) Team 9 - Tyson Barrie (Edm - D)
+(5) Team 8 - Ilya Samsonov (Was - G)
+(6) Team 7 - Ondrej Palat (TB - LW)
+(7) Team 6 - Roman Josi (Nsh - D)
+(8) Team 5 - Ryan O'Reilly (StL - C)
+(9) Team 4 - Evgeni Malkin (Pit - C)
+(10) Team 3 - Anze Kopitar (LA - C)
+(11) Team 2 - Ryan Nugent-Hopkins (Edm - C,LW)
+(12) Team 1 - Philipp Grubauer (Sea - G)
+
+
+Round 7
+(1) Team 1 - Seth Jones (Chi - D)
+(2) Team 2 - Miro Heiskanen (Dal - D)
+(3) Team 3 - Jack Campbell (Tor - G)
+(4) Team 4 - Juuse Saros (Nsh - G)
+(5) Team 5 - Alexander Radulov (Dal - LW,RW)
+(6) Team 6 - Petr Mrazek (Tor - G)
+(7) Team 7 - Spencer Knight (Fla - G)
+(8) Team 8 - Sam Reinhart (Fla - C,RW)
+(9) Team 9 - Jason Robertson (Dal - LW)
+(10) Team 10 - T.J. Oshie (Was - C,RW)
+(11) Team 11 - Kevin Lankinen (Chi - G)
+(12) Team 12 - Elias Lindholm (Cgy - C,RW)
+
+
+Round 8
+(1) Team 12 - Shea Theodore (VGK - D)
+(2) Team 11 - Kris Letang (Pit - D)
+(3) Team 10 - Nick Suzuki (Mon - C,RW)
+(4) Team 9 - Mackenzie Blackwood (NJ - G)
+(5) Team 8 - Martin Necas (Car - C,RW)
+(6) Team 7 - Jakob Chychrun (Ari - D)
+(7) Team 6 - Jordan Binnington (StL - G)
+(8) Team 5 - Brayden Schenn (StL - C,RW)
+(9) Team 4 - Thatcher Demko (Van - G)
+(10) Team 3 - Sam Bennett (Fla - C,LW)
+(11) Team 2 - Cole Caufield (Mon - RW)
+(12) Team 1 - Vladimir Tarasenko (StL - RW)
+
+
+Round 9
+(1) Team 1 - Torey Krug (StL - D)
+(2) Team 2 - Darnell Nurse (Edm - D)
+(3) Team 3 - Tyler Seguin (Dal - C,RW)
+(4) Team 4 - Andre Burakovsky (Col - LW,RW)
+(5) Team 5 - Blake Wheeler (Wpg - C,RW)
+(6) Team 6 - Drew Doughty (LA - D)
+(7) Team 7 - Bryan Rust (Pit - LW,RW)
+(8) Team 8 - John Klingberg (Dal - D)
+(9) Team 9 - Linus Ullmark (Bos - G)
+(10) Team 10 - Zach Werenski (Cls - D)
+(11) Team 11 - Filip Forsberg (Nsh - LW)
+(12) Team 12 - Sergei Bobrovsky (Fla - G)
+
+
+Round 10
+(1) Team 12 - Vitek Vanecek (Was - G)
+(2) Team 11 - MacKenzie Weegar (Fla - D)
+(3) Team 10 - Jeff Petry (Mon - D)
+(4) Team 9 - Ryan Ellis (Phi - D)
+(5) Team 8 - Thomas Chabot (Ott - D)
+(6) Team 7 - William Nylander (Tor - LW,RW)
+(7) Team 6 - David Perron (StL - LW,RW)
+(8) Team 5 - Tomas Hertl (SJ - C,LW)
+(9) Team 4 - Sean Couturier (Phi - C)
+(10) Team 3 - Mikhail Sergachev (TB - D)
+(11) Team 2 - Jonathan Marchessault (VGK - C,LW)
+(12) Team 1 - Jamie Benn (Dal - C,LW)
+
+
+Round 11
+(1) Team 1 - Jared Spurgeon (Min - D)
+(2) Team 2 - Ivan Provorov (Phi - D)
+(3) Team 3 - Neal Pionk (Wpg - D)
+(4) Team 4 - Ty Smith (NJ - D)
+(5) Team 5 - Jack Hughes (NJ - C,LW)
+(6) Team 6 - Taylor Hall (Bos - LW)
+(7) Team 7 - Samuel Girard (Col - D)
+(8) Team 8 - Devon Toews (Col - D)
+(9) Team 9 - Mathew Dumba (Min - D)
+(10) Team 10 - Oliver Ekman-Larsson (Van - D)
+(11) Team 11 - Vince Dunn (Sea - D)
+(12) Team 12 - Jakub Voracek (Cls - LW,RW)
+
+
+Round 12
+(1) Team 12 - Alec Martinez (VGK - D)
+(2) Team 11 - Anthony DeAngelo (Car - D)
+(3) Team 10 - Mark Giordano (Sea - D)
+(4) Team 9 - Mattias Ekholm (Nsh - D)
+(5) Team 8 - Brent Burns (SJ - D)
+(6) Team 7 - Rasmus Dahlin (Buf - D)
+(7) Team 6 - Matt Grzelcyk (Bos - D)
+(8) Team 5 - Erik Karlsson (SJ - D)
+(9) Team 4 - Ryan Suter (Dal - D)
+(10) Team 3 - Justin Schultz (Was - D)
+(11) Team 2 - Jamie Drysdale (Anh - D)
+(12) Team 1 - Jaccob Slavin (Car - D)
+
+
+Round 13
+(1) Team 1 - Jeremy Swayman (Bos - G)
+(2) Team 2 - Alex Nedeljkovic (Det - G)
+(3) Team 3 - Bo Horvat (Van - C)
+(4) Team 4 - Kaapo Kahkonen (Min - G)
+(5) Team 5 - Jake Oettinger (Dal - G)
+(6) Team 6 - Tom Wilson (Was - RW)
+(7) Team 7 - Carter Hart (Phi - G)
+(8) Team 8 - Ryan Strome (NYR - C,RW)
+(9) Team 9 - Joe Pavelski (Dal - C,RW)
+(10) Team 10 - Chris Kreider (NYR - LW)
+(11) Team 11 - Brendan Gallagher (Mon - RW)
+(12) Team 12 - Kevin Fiala (Min - LW,RW)
+
+
+Round 14
+(1) Team 12 - Vincent Trocheck (Car - C)
+(2) Team 11 - Dominik Kubalik (Chi - LW,RW)
+(3) Team 10 - Anthony Mantha (Was - LW,RW)
+(4) Team 9 - Alexis Lafreniere (NYR - LW)
+(5) Team 8 - Jakub Vrana (Det - LW)
+(6) Team 7 - Teuvo Teravainen (Car - LW,RW)
+(7) Team 6 - Jacob Markstrom (Cgy - G)
+(8) Team 5 - Patric Hornqvist (Fla - RW)
+(9) Team 4 - Jean-Gabriel Pageau (NYI - C)
+(10) Team 3 - Chris Driedger (Sea - G)
+(11) Team 2 - Carter Verhaeghe (Fla - C,LW)
+(12) Team 1 - Viktor Arvidsson (LA - LW,RW)
+
+
+Round 15
+(1) Team 1 - Evander Kane (SJ - LW,RW)
+(2) Team 2 - Pavel Buchnevich (StL - RW)
+(3) Team 3 - Oliver Bjorkstrand (Cls - LW,RW)
+(4) Team 4 - Patrik Laine (Cls - LW,RW)
+(5) Team 5 - William Karlsson (VGK - C)
+(6) Team 6 - Tyler Toffoli (Mon - LW,RW)
+(7) Team 7 - Zach Hyman (Edm - LW,RW)
+(8) Team 8 - Cam Atkinson (Phi - RW)
+(9) Team 9 - Calvin Petersen (LA - G)
+(10) Team 10 - Elvis Merzlikins (Cls - G)
+(11) Team 11 - John Gibson (Anh - G)
+(12) Team 12 - Claude Giroux (Phi - C,LW)
+
+
+Round 16
+(1) Team 12 - Tristan Jarry (Pit - G)
+(2) Team 11 - Dylan Larkin (Det - C)
+(3) Team 10 - Sean Monahan (Cgy - C)
+(4) Team 9 - Conor Garland (Van - LW,RW)
+(5) Team 8 - Jaroslav Halak (Van - G)
+(6) Team 7 - Joshua Norris (Ott - C)
+(7) Team 6 - Joel Eriksson Ek (Min - C)
+(8) Team 5 - Tim Stutzle (Ott - LW)
+(9) Team 4 - Jaden Schwartz (Sea - LW)
+(10) Team 3 - Anders Lee (NYI - LW)
+(11) Team 2 - Trevor Zegras (Anh - C,LW)
+(12) Team 1 - Jeff Carter (Pit - C,RW)
