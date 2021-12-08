@@ -16,6 +16,7 @@ library(tidyverse)
 library(rsample)
 library(tfdatasets)
 library(RMySQL)
+library(ggplot2)
 
 #Sourcing all required functions
 setwd("/Users/maxkwan/Documents/Everything/College/Senior/IE332/Project/") 
@@ -23,6 +24,8 @@ source('get_draft.R') #Scrapes user inputted data from txt file
 source('NHL Scrape.R') #Scrapes player stats from websites
 source('Scores.R') #Calculates a score for players from inputted metrics 
 source('kill_db_connections.R') #Used to kill all connections
+
+killDbConnections()
 
 #==============================================================================
 #Read, Format, and Validate Inputs
@@ -40,7 +43,7 @@ draft <- get_draft(league_id_input = league_id)
 
 #***********USER INPUTS FOR DREW*******************
 current_date <- as.Date("2021-10-20") #REMOVE AFTER TESTING
-gm_ids_raw <- c("1,2,8,23,24,25,26,27,28,29,30,31") #REMOVE AFTER TESTING
+gm_ids_raw <- c("1,2,8,23,24,25,26,27,28,29,30,31,32,33") #REMOVE AFTER TESTING
 league_KPIs_raw <- ('G,A,GS,SV') #REMOVE AFTER TESTING
 
 #Format Inputs and Initialize Variables
@@ -274,6 +277,14 @@ if (num_teams == 12) {
 }
 draft <- cbind(draft, 'Pick Rating' = pick_rating, 'Optimal Pick' = optimal_pick)
 
+#*************FOR DREW************************
+ranked <- gm_report[order(gm_report$Grade),c(1:2)]
+barplot(ranked$Grade,names.arg = ranked$Name, xlab="GMs",ylab="Grade",col="cornflower blue",main="GM Grades", ylim = c(0,100))
+df <- data.frame("Draft Position" = merge_stats_clean$Draft.Position, "Score" = merge_stats_clean$scores, "Position" = merge_stats_clean$pos)
+ggplot(df,aes(Draft.Position, Score, color = Position),xlab("Draft Position"))+geom_point()
+
+#*************FOR DREW************************
+
 #==============================================================================
 #Upload Draft Information to MySQL
 #==============================================================================
@@ -285,6 +296,7 @@ league <- data.frame("league_id" = league_id,
   "number_of_rounds"= num_rounds, 
   "number_of_teams" = num_teams
 )
+league[is.na(league)] = '0'
 
 #Format teams Data 
 league_ids <- rep(league_id, num_teams)
@@ -296,6 +308,7 @@ teams <- data.frame(
   "best_pick_report" = gm_report$Message.x,
   "worst_pick_report" = gm_report$Message.y
 )
+teams[is.na(teams)] = '0'
 
 #Format has_players Data 
 has_players_user_id <- paste("NA",length(merge_stats_clean$Id))
@@ -314,21 +327,22 @@ has_players <- data.frame(
   "score" = merge_stats_clean$scores,
   "optimal_pick" = optimal_pick
 )
+has_players[is.na(has_players)] = '0'
 
 #Write leagues, teams, and has_players tables to MySQL
-# dbWriteTable(db, value = league, name = "leagues", append = TRUE, row.names = FALSE)
-# 
-# dbWriteTable(
-#   db,"teams",teams,
-#   field.types = NULL, 
-#   row.names = FALSE, 
-#   append = TRUE, 
-#   allow.keywords = FALSE
-# )
-# 
-# dbWriteTable(
-#   db,"has_players",has_players,
-#   field.types = NULL, 
-#   row.names = FALSE, 
-#   append = TRUE, 
-# )
+dbWriteTable(db, value = league, name = "leagues", append = TRUE, row.names = FALSE)
+
+dbWriteTable(
+  db,"teams",teams,
+  field.types = NULL,
+  row.names = FALSE,
+  append = TRUE,
+  allow.keywords = FALSE
+)
+
+dbWriteTable(
+  db,"has_players",has_players,
+  field.types = NULL,
+  row.names = FALSE,
+  append = TRUE,
+)
